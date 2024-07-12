@@ -1,13 +1,13 @@
 // eslint-disable-next-line no-unused-vars
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import TodoListTemplate from "./components/TodoListTemplate.jsx";
 import Form from "./components/Form.jsx";
 import TodoItemList from "./components/TodoItemList.jsx";
 
-class App extends Component {
-    id = 3
+function App() {
+    let id = 3
 
-    state = {
+    const state = {
         input: '',
         todos: [
             {
@@ -22,13 +22,13 @@ class App extends Component {
         ]
     }
 
-    handleChange = (e) => {
+    const handleChange = (e) => {
         this.setState({
             input: e.target.value
         });
     }
 
-    handleCreate = () =>{
+    const handleCreate = () =>{
         const { input, todos } = this.state;
         this.setState({
             input: '',
@@ -40,13 +40,13 @@ class App extends Component {
         })
     }
 
-    handleKeyPress = (e) => {
+    const handleKeyPress = (e) => {
         if(e.key === 'Enter') {
             this.handleCreate();
         }
     }
 
-    handleToggle = (id) => {
+    const handleToggle = (id) => {
         const { todos } = this.state;
 
         const index = todos.findIndex(todo => todo.id === id);
@@ -63,7 +63,7 @@ class App extends Component {
         })
     }
 
-    handleRemove = (id) => {
+    const handleRemove = (id) => {
         const { todos } = this.state;
         this.setState({
             todos: todos.filter(todo => todo.id !== id)
