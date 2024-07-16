@@ -1,15 +1,12 @@
-// eslint-disable-next-line no-unused-vars
 import React, { useState } from 'react';
 import TodoListTemplate from "./components/TodoListTemplate.jsx";
 import Form from "./components/Form.jsx";
 import TodoItemList from "./components/TodoItemList.jsx";
 
 function App() {
-    let id = 3
-
-    const state = {
-        input: '',
-        todos: [
+    const [id, setId] = useState(3);
+    const [input, setInput] = useState('');
+    const [todos, setTodos] = useState([
             {
                 id: 0, text: '리액트 예제 해보기', checked: false
             },
@@ -19,67 +16,37 @@ function App() {
             {
                 id: 2, text: '리액트 공부', checked: false
             }
-        ]
-    }
+        ]);
 
-    const handleChange = (e) => {
-        this.setState({
-            input: e.target.value
-        });
-    }
+    const handleChange = useCallback((e) => {
+        setInput(e.target.value);
+    },[]);
 
-    const handleCreate = () =>{
-        const { input, todos } = this.state;
-        this.setState({
-            input: '',
-            todos: todos.concat({
-                id: this.id++,
-                text: input,
-                checked: false
-            })
-        })
-    }
+    const handleCreate = useCallback(() => {
+        setTodos(todos.concat({
+            id: id,
+            text: input,
+            checked: false
+        }));
+        setId(id+1);
+        setInput('');
+    },[input, todos, id]);
 
-    const handleKeyPress = (e) => {
+    const handleKeyPress = useCallback((e) => {
         if(e.key === 'Enter') {
-            this.handleCreate();
+            handleCreate();
         }
-    }
+    }, [handleCreate]);
 
-    const handleToggle = (id) => {
-        const { todos } = this.state;
+    const handleToggle = useCallback((id) => {
+        setTodos(todos.map(todo =>
+            todo.id === id ? { ...todo, checked: !todo.checked } : todo
+        ));
+    },[todos]);
 
-        const index = todos.findIndex(todo => todo.id === id);
-        const selected = todos[index];
-        const nextTodos = [...todos];
-
-        nextTodos[index]={
-            ...selected,
-            checked: !selected.checked
-        };
-
-        this.setState({
-            todos: nextTodos
-        })
-    }
-
-    const handleRemove = (id) => {
-        const { todos } = this.state;
-        this.setState({
-            todos: todos.filter(todo => todo.id !== id)
-            }
-        )
-    }
-
-    render() {
-        const { input, todos } = this.state;
-        const {
-            handleChange,
-            handleCreate,
-            handleKeyPress,
-            handleToggle,
-            handleRemove
-        } = this;
+    const handleRemove = useCallback((id) => {
+        setTodos(todos.filter(todo => todo.id !==id));
+    },[todos]);
 
         return (
             <TodoListTemplate form={<Form
@@ -91,7 +58,6 @@ function App() {
                 <TodoItemList todos={todos} onToggle={handleToggle} onRemove={handleRemove}></TodoItemList>
             </TodoListTemplate>
         );
-    }
 }
 
 export default App;
